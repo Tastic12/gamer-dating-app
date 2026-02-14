@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { DateOfBirthPicker } from '@/components/ui/date-of-birth-picker'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -131,23 +132,22 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+            <Label>Date of Birth</Label>
             <Controller
               control={control}
               name="dateOfBirth"
               render={({ field }) => (
-                <Input
-                  type="date"
-                  id="dateOfBirth"
-                  max={format(
-                    new Date(new Date().setFullYear(new Date().getFullYear() - 18)),
-                    'yyyy-MM-dd'
-                  )}
-                  onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
-                  value={field.value ? format(field.value, 'yyyy-MM-dd') : ''}
+                <DateOfBirthPicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  minAge={18}
+                  maxAge={100}
                 />
               )}
             />
+            <p className="text-xs text-muted-foreground">
+              You must be 18 or older to use this service
+            </p>
             {errors.dateOfBirth && (
               <p className="text-xs text-destructive">{errors.dateOfBirth.message}</p>
             )}

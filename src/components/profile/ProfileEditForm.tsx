@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
 import { Loader2, Plus, X } from 'lucide-react'
 import { PhotoUpload } from './PhotoUpload'
 import { createClient } from '@/lib/supabase/client'
@@ -21,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { DateOfBirthPicker } from '@/components/ui/date-of-birth-picker'
 import { updateProfileSchema, type UpdateProfileInput } from '@/lib/validations/profile'
 import {
   PLATFORMS,
@@ -204,20 +204,16 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date_of_birth">Date of Birth</Label>
+            <Label>Date of Birth</Label>
             <Controller
               control={control}
               name="date_of_birth"
               render={({ field }) => (
-                <Input
-                  type="date"
-                  id="date_of_birth"
-                  max={format(
-                    new Date(new Date().setFullYear(new Date().getFullYear() - 18)),
-                    'yyyy-MM-dd'
-                  )}
-                  onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
-                  value={field.value ? format(field.value, 'yyyy-MM-dd') : ''}
+                <DateOfBirthPicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  minAge={18}
+                  maxAge={100}
                 />
               )}
             />
