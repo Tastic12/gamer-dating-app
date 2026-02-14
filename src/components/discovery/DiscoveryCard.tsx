@@ -190,25 +190,6 @@ export function DiscoveryCard({ profile, onLike, onPass, isActioning }: Discover
           </div>
         </div>
 
-        {/* Playstyle & Voice - Quick compatibility check */}
-        <div className="flex flex-wrap items-center gap-3 text-sm">
-          <Badge variant="outline" className="gap-1">
-            {profile.playstyle === 'competitive' ? '🏆' : profile.playstyle === 'casual' ? '☕' : '⚡'}
-            <span className="capitalize">{profile.playstyle}</span>
-          </Badge>
-          <Badge variant="outline" className="gap-1">
-            {profile.voice_chat ? (
-              <>
-                <Mic className="h-3 w-3" /> Voice chat
-              </>
-            ) : (
-              <>
-                <MicOff className="h-3 w-3" /> No voice
-              </>
-            )}
-          </Badge>
-        </div>
-
         {/* Expandable Details */}
         <button
           onClick={() => setExpanded(!expanded)}
@@ -227,6 +208,25 @@ export function DiscoveryCard({ profile, onLike, onPass, isActioning }: Discover
 
         {expanded && (
           <div className="space-y-4 rounded-lg bg-muted/30 p-4">
+            {/* Playstyle & Voice */}
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <Badge variant="outline" className="gap-1">
+                {profile.playstyle === 'competitive' ? '🏆' : profile.playstyle === 'casual' ? '☕' : '⚡'}
+                <span className="capitalize">{profile.playstyle}</span>
+              </Badge>
+              <Badge variant="outline" className="gap-1">
+                {profile.voice_chat ? (
+                  <>
+                    <Mic className="h-3 w-3" /> Voice chat
+                  </>
+                ) : (
+                  <>
+                    <MicOff className="h-3 w-3" /> No voice
+                  </>
+                )}
+              </Badge>
+            </div>
+
             {/* Platforms */}
             <div>
               <p className="mb-2 text-xs font-medium text-muted-foreground">Platforms</p>
