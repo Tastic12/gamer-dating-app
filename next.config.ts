@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         hostname: 'utgmhwaiojgfpqzjdftw.supabase.co',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'api.dicebear.com',
+        pathname: '/**',
+      },
     ],
   },
 };

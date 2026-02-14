@@ -172,7 +172,56 @@ function generateBio(playstyle: string, genres: string[], games: string[]): stri
     .replace('{funFact}', randomItem(FUN_FACTS))
 }
 
-// Removed generateUUID - we'll use auth user IDs instead
+// Avatar styles for variety (DiceBear API)
+const AVATAR_STYLES = [
+  'adventurer',
+  'adventurer-neutral', 
+  'avataaars',
+  'big-ears',
+  'big-smile',
+  'bottts',
+  'croodles',
+  'fun-emoji',
+  'lorelei',
+  'micah',
+  'miniavs',
+  'notionists',
+  'open-peeps',
+  'personas',
+  'pixel-art',
+]
+
+// Background colors for avatars (gaming-themed)
+const AVATAR_BACKGROUNDS = [
+  'b6e3f4', // light blue
+  'c0aede', // light purple  
+  'd1d4f9', // lavender
+  'ffd5dc', // light pink
+  'ffdfbf', // light orange
+  'a3e635', // lime
+  '38bdf8', // sky blue
+  'fb7185', // rose
+  'a78bfa', // violet
+  '34d399', // emerald
+]
+
+function generateAvatarUrls(displayName: string, index: number): string[] {
+  // Generate 1-3 avatar URLs per profile for variety
+  const numAvatars = Math.floor(Math.random() * 3) + 1
+  const avatars: string[] = []
+  
+  for (let i = 0; i < numAvatars; i++) {
+    const style = AVATAR_STYLES[(index + i) % AVATAR_STYLES.length]
+    const bgColor = randomItem(AVATAR_BACKGROUNDS)
+    const seed = `${displayName}-${i}-${Date.now()}`
+    
+    // DiceBear API - generates unique avatars based on seed
+    const url = `https://api.dicebear.com/7.x/${style}/png?seed=${encodeURIComponent(seed)}&backgroundColor=${bgColor}&size=400`
+    avatars.push(url)
+  }
+  
+  return avatars
+}
 
 // ============================================
 // Profile Generation
@@ -219,7 +268,7 @@ function generateProfileData(index: number, userId: string): FakeProfile {
     playstyle,
     voice_chat: Math.random() > 0.3, // 70% use voice chat
     typical_play_times: playTimes,
-    photo_urls: [], // No photos for seed profiles
+    photo_urls: generateAvatarUrls(displayName, index), // Generated avatar images
     is_active: true,
     is_banned: false,
     email_verified: true,

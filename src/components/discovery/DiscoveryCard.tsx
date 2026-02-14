@@ -165,37 +165,38 @@ export function DiscoveryCard({ profile, onLike, onPass, isActioning }: Discover
       </div>
 
       <CardContent className="space-y-4 p-6">
-        {/* Platforms */}
-        <div>
-          <p className="mb-2 text-xs font-medium text-muted-foreground">Platforms</p>
-          <div className="flex flex-wrap gap-2">
-            {profile.platforms.map((platform) => (
-              <Badge key={platform} variant="secondary">
-                <Gamepad2 className="mr-1 h-3 w-3" />
-                {platform}
-              </Badge>
-            ))}
+        {/* About/Bio - Primary focus */}
+        {profile.bio && (
+          <div>
+            <p className="mb-2 text-xs font-medium text-muted-foreground">About</p>
+            <p className={cn(
+              'text-sm leading-relaxed',
+              !expanded && 'line-clamp-3'
+            )}>
+              {profile.bio}
+            </p>
           </div>
-        </div>
+        )}
 
-        {/* Top Games */}
+        {/* Top Games - Conversation starters */}
         <div>
           <p className="mb-2 text-xs font-medium text-muted-foreground">Top Games</p>
           <div className="flex flex-wrap gap-2">
             {profile.top_games.map((game, i) => (
-              <Badge key={i} variant="outline">
-                {game}
+              <Badge key={i} variant="secondary" className="bg-primary/10 text-primary">
+                🎮 {game}
               </Badge>
             ))}
           </div>
         </div>
 
-        {/* Playstyle & Voice */}
-        <div className="flex items-center gap-4 text-sm">
-          <span className="capitalize">
-            <span className="font-medium">{profile.playstyle}</span> player
-          </span>
-          <span className="flex items-center gap-1 text-muted-foreground">
+        {/* Playstyle & Voice - Quick compatibility check */}
+        <div className="flex flex-wrap items-center gap-3 text-sm">
+          <Badge variant="outline" className="gap-1">
+            {profile.playstyle === 'competitive' ? '🏆' : profile.playstyle === 'casual' ? '☕' : '⚡'}
+            <span className="capitalize">{profile.playstyle}</span>
+          </Badge>
+          <Badge variant="outline" className="gap-1">
             {profile.voice_chat ? (
               <>
                 <Mic className="h-3 w-3" /> Voice chat
@@ -205,13 +206,13 @@ export function DiscoveryCard({ profile, onLike, onPass, isActioning }: Discover
                 <MicOff className="h-3 w-3" /> No voice
               </>
             )}
-          </span>
+          </Badge>
         </div>
 
         {/* Expandable Details */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex w-full items-center justify-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-muted-foreground/30 py-2 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
         >
           {expanded ? (
             <>
@@ -219,13 +220,26 @@ export function DiscoveryCard({ profile, onLike, onPass, isActioning }: Discover
             </>
           ) : (
             <>
-              Show more <ChevronDown className="h-4 w-4" />
+              More details <ChevronDown className="h-4 w-4" />
             </>
           )}
         </button>
 
         {expanded && (
-          <div className="space-y-4 border-t pt-4">
+          <div className="space-y-4 rounded-lg bg-muted/30 p-4">
+            {/* Platforms */}
+            <div>
+              <p className="mb-2 text-xs font-medium text-muted-foreground">Platforms</p>
+              <div className="flex flex-wrap gap-2">
+                {profile.platforms.map((platform) => (
+                  <Badge key={platform} variant="outline" className="text-xs">
+                    <Gamepad2 className="mr-1 h-3 w-3" />
+                    {platform}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
             {/* Genres */}
             <div>
               <p className="mb-2 text-xs font-medium text-muted-foreground">Favorite Genres</p>
@@ -243,14 +257,6 @@ export function DiscoveryCard({ profile, onLike, onPass, isActioning }: Discover
               <div>
                 <p className="mb-2 text-xs font-medium text-muted-foreground">Usually plays</p>
                 <p className="text-sm">{profile.typical_play_times.join(', ')}</p>
-              </div>
-            )}
-
-            {/* Bio */}
-            {profile.bio && (
-              <div>
-                <p className="mb-2 text-xs font-medium text-muted-foreground">About</p>
-                <p className="text-sm text-muted-foreground">{profile.bio}</p>
               </div>
             )}
           </div>
