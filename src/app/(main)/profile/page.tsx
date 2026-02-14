@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { differenceInYears } from 'date-fns'
 import {
   MapPin,
@@ -9,12 +10,16 @@ import {
   Clock,
   Settings,
   Pencil,
+  Camera,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import type { Profile } from '@/types/database'
+import { ProfilePhotoGallery } from '@/components/profile/ProfilePhotoGallery'
 
 export const metadata = {
   title: 'Profile',
@@ -64,13 +69,16 @@ export default async function ProfilePage() {
       </div>
 
       <div className="space-y-6">
+        {/* Photo Gallery */}
+        <ProfilePhotoGallery 
+          photos={typedProfile.photo_urls || []} 
+          displayName={typedProfile.display_name}
+        />
+
         {/* Header Card */}
         <Card>
           <CardContent className="pt-6">
-            <div className="flex items-start gap-4">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-3xl font-bold text-primary">
-                {typedProfile.display_name.charAt(0).toUpperCase()}
-              </div>
+            <div className="text-center sm:flex sm:items-start sm:gap-4 sm:text-left">
               <div className="flex-1">
                 <h2 className="text-xl font-bold">{typedProfile.display_name}</h2>
                 <p className="text-muted-foreground">
@@ -78,7 +86,7 @@ export default async function ProfilePage() {
                   {typedProfile.pronouns && ` • ${typedProfile.pronouns}`}
                 </p>
                 {typedProfile.region && (
-                  <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                  <p className="mt-1 flex items-center justify-center gap-1 text-sm text-muted-foreground sm:justify-start">
                     <MapPin className="h-3 w-3" />
                     {typedProfile.region}
                   </p>

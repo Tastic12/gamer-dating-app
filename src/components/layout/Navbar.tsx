@@ -7,6 +7,8 @@ import { useState, useRef, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { APP_NAME } from '@/lib/constants'
 import { cn } from '@/lib/utils'
+import { Avatar } from '@/components/ui/avatar'
+import { useProfile } from '@/hooks/useProfile'
 
 const navLinks = [
   { href: '/discover', label: 'Discover' },
@@ -19,6 +21,7 @@ export function Navbar() {
   const router = useRouter()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const { profile } = useProfile()
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -68,9 +71,13 @@ export function Navbar() {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-muted hover:bg-muted/80"
+            className="flex items-center justify-center rounded-full ring-2 ring-transparent transition-all hover:ring-primary/50"
           >
-            <User className="h-5 w-5" />
+            <Avatar
+              src={profile?.photo_urls?.[0]}
+              fallback={profile?.display_name}
+              size="md"
+            />
           </button>
 
           {dropdownOpen && (
