@@ -6,6 +6,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { Loader2, Plus, X } from 'lucide-react'
+import { PhotoUpload } from './PhotoUpload'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -43,6 +44,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [photos, setPhotos] = useState<string[]>(profile.photo_urls || [])
 
   const {
     register,
@@ -142,6 +144,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
         ...data,
         date_of_birth: data.date_of_birth?.toISOString().split('T')[0],
         top_games: data.top_games?.filter((g) => g.trim().length > 0),
+        photo_urls: photos,
       }
 
       const { error: updateError } = await supabase
@@ -167,6 +170,24 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
       {error && (
         <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
       )}
+
+      {/* Profile Photos */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile Photos</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Add photos to show off your personality. Your first photo will be your main profile picture.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <PhotoUpload
+            userId={profile.id}
+            currentPhotos={photos}
+            onPhotosChange={setPhotos}
+            maxPhotos={6}
+          />
+        </CardContent>
+      </Card>
 
       {/* Basic Info */}
       <Card>
