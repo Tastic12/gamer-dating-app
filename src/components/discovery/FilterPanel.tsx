@@ -12,13 +12,6 @@ import {
   SheetTitle,
   SheetFooter,
 } from '@/components/ui/sheet'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { PLATFORMS, GENRES, PLAYSTYLES, REGIONS } from '@/lib/constants'
 import type { DiscoveryFilters } from '@/app/(main)/discover/actions'
 import { cn } from '@/lib/utils'
@@ -60,6 +53,26 @@ export function FilterPanel({ open, onClose, filters, onApply }: FilterPanelProp
         return { ...prev, regions: current.filter((r) => r !== region) }
       }
       return { ...prev, regions: [...current, region] }
+    })
+  }
+
+  const togglePlaystyle = (playstyle: string) => {
+    setLocalFilters((prev) => {
+      // If already selected, deselect it
+      if (prev.playstyle === playstyle) {
+        return { ...prev, playstyle: undefined }
+      }
+      return { ...prev, playstyle }
+    })
+  }
+
+  const toggleVoiceChat = (value: boolean | undefined) => {
+    setLocalFilters((prev) => {
+      // If already selected, deselect it
+      if (prev.voiceChat === value) {
+        return { ...prev, voiceChat: undefined }
+      }
+      return { ...prev, voiceChat: value }
     })
   }
 
@@ -127,56 +140,39 @@ export function FilterPanel({ open, onClose, filters, onApply }: FilterPanelProp
           {/* Playstyle */}
           <div className="space-y-3">
             <Label>Playstyle</Label>
-            <Select
-              value={localFilters.playstyle || 'any'}
-              onValueChange={(v) =>
-                setLocalFilters((prev) => ({
-                  ...prev,
-                  playstyle: v === 'any' ? undefined : v,
-                }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Any playstyle" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="any">Any playstyle</SelectItem>
-                {PLAYSTYLES.map((style) => (
-                  <SelectItem key={style} value={style} className="capitalize">
-                    {style}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex flex-wrap gap-2">
+              {PLAYSTYLES.map((style) => (
+                <Badge
+                  key={style}
+                  variant={localFilters.playstyle === style ? 'default' : 'outline'}
+                  className="cursor-pointer capitalize"
+                  onClick={() => togglePlaystyle(style)}
+                >
+                  {style}
+                </Badge>
+              ))}
+            </div>
           </div>
 
           {/* Voice Chat */}
           <div className="space-y-3">
             <Label>Voice Chat</Label>
-            <Select
-              value={
-                localFilters.voiceChat === undefined
-                  ? 'any'
-                  : localFilters.voiceChat
-                    ? 'yes'
-                    : 'no'
-              }
-              onValueChange={(v) =>
-                setLocalFilters((prev) => ({
-                  ...prev,
-                  voiceChat: v === 'any' ? undefined : v === 'yes',
-                }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Any" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="any">Any</SelectItem>
-                <SelectItem value="yes">Uses voice chat</SelectItem>
-                <SelectItem value="no">No voice chat</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex flex-wrap gap-2">
+              <Badge
+                variant={localFilters.voiceChat === true ? 'default' : 'outline'}
+                className="cursor-pointer"
+                onClick={() => toggleVoiceChat(true)}
+              >
+                Uses voice chat
+              </Badge>
+              <Badge
+                variant={localFilters.voiceChat === false ? 'default' : 'outline'}
+                className="cursor-pointer"
+                onClick={() => toggleVoiceChat(false)}
+              >
+                No voice chat
+              </Badge>
+            </div>
           </div>
 
           {/* Regions */}
